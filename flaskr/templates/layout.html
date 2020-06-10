@@ -1,0 +1,32 @@
+<!doctype html>
+
+<head>
+  <title>{% block title %}{% endblock %} - Blog</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Blog</a>
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link active" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/post">Posts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/about">About</a>
+    </li>
+  </ul>
+</nav>
+<section class="content">
+  <div class="container-fluid">
+    {% block header %}{% endblock %}
+    {% for message in get_flashed_messages() %}
+    <div class="row">
+      <div class="col">{{ message }}</div>
+    </div>{% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+</section>
