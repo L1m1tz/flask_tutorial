@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -9,8 +10,6 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
-    from . import main_blueprint
-    app.register_blueprint(main_blueprint)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -24,14 +23,13 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
-
-    from . import routes
 
     # add db comands and close_db to the app
     from . import db
     db.init_app(app)
 
-
+    # register main_blueprint to app
+    from . import main
+    app.register_blueprint(main.main_blueprint)
 
     return app
