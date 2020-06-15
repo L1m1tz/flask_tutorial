@@ -31,5 +31,11 @@ def create_app(test_config=None):
     # register main_blueprint to app
     from . import main
     app.register_blueprint(main.main_blueprint)
+    from . import auth
+    app.register_blueprint(auth.auth_blueprint)
+    from . import post
+    app.register_blueprint(post.post_blueprint)
+    from . import profile
+    app.register_blueprint(profile.profile_blueprint)
 
     return app
