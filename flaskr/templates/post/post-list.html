@@ -2,31 +2,27 @@
 
 {% block header %}
   <h1>{% block title %}Posts{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('post.list') }}">New</a>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-<!doctype html>
-<html>
-   <body>
-   
-      <table border = 1>
-         <thead>
-            <td>Username</td>
-            <td>Email</td>
-            <td>Post</td>
-         </thead>
-         
-         {% for row in rows %}
-            <tr>
-               <td>{{row["name"]}}</td>
-               <td>{{row["email"]}}</td>
-               <td> {{ row["Post"]}}</td>
-            </tr>
-         {% endfor %}
-      </table>
-      
-      <a href = "/">Go back to home page</a>
-      
-   </body>
-</html>
+  {% for post in posts %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{ post['title'] }}</h1>
+          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == post['author_id'] %}
+          <a class="action" href="{{ url_for('post.update', id=post['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+      <p class="body">{{ post['body'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
 {% endblock %}

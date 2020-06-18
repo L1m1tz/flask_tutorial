@@ -1,13 +1,13 @@
-import functools
+from functools import wraps
+import gc
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, 
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
 
 auth_blueprint = Blueprint('auth', __name__, url_prefix='/auth')
-
 
 @auth_blueprint.route('/register', methods=('GET', 'POST'))
 def register():
@@ -75,9 +75,39 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['id'] = user['id']
+            g.user = user
             return redirect(url_for('main.home'))
 
         flash(error)
 
     return render_template('auth/login.html')
+
+@auth_blueprint.before_app_request
+def load_logged_in_user():
+    id = session.get('id')
+
+    if id is None:
+        g.user = None
+    else:
+        g.user = get_db().execute(
+            'SELECT * FROM user WHERE id = ?', (id,)
+        ).fetchone()
+
+
+def login_required(view):
+    @wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            flash('You need to be Logged in')
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+
+    return wrapped_view
+
+@auth_blueprint.route('/logout')
+@login_required
+def logout():
+    session.clear()
+    flash('You have been logged out')
+    return redirect(url_for('auth.login'))
