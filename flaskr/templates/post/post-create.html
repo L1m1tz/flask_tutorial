@@ -1,13 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-  <h1>{% block title %}Post Create Page{% endblock %}</h1>
+  <h1>{% block title %}New Post{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-    <ul>
-        <li>Post 1</li>
-        <li>Post 2</li>
-        <li>Post 3</li>
-    </ul>
+  <form>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input name="title" type="text" class="form-control" id="title" placeholder="Title" value="{{ request.form['title'] }}" required>
+    </div>
+    <div class="form-group">
+      <label for="body">Example textarea</label>
+      <textarea name="body" class="form-control" id="body" rows="3">{{ request.form['body'] }}</textarea>
+    </div>
+    <div>
+      <button type="submit" value="save" class="btn btn-primary">Post</button>
+    </div>
+  </form>
 {% endblock %}

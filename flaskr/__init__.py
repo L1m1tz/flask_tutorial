@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flaskr.db import get_db
 
 
 def create_app(test_config=None):
@@ -35,6 +36,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.auth_blueprint)
     from . import post
     app.register_blueprint(post.post_blueprint)
+    app.add_url_rule('/', endpoint='post')
     from . import profile
     app.register_blueprint(profile.profile_blueprint)
 
