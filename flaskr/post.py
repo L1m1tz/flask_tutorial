@@ -19,12 +19,11 @@ def list():
     ).fetchall()
     return render_template('post/post-list.html', posts=posts)
 
+@post_blueprint.route('/<int:id>')
+def view(id):
+    post = get_post(id, False)
 
-@post_blueprint.route('/post/<int:post_id>')
-def show_post(post_id):
-    # show the post with the given id, the id is an integer
-    return 'Post %d' % post_id
-
+    return render_template('post/post-view.html', post=post)
 
 @post_blueprint.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -42,14 +41,13 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO post (author_id, title, body)'
+                'INSERT INTO post (title, body, author_id)'
                 ' VALUES (?, ?, ?)',
                 (title, body, g.user['id'])
             )
             db.commit()
             return redirect(url_for('post.list'))
     return render_template('post/post-create.html')
-
 
 def get_post(id, check_author=True):
     post = get_db().execute(
@@ -92,7 +90,7 @@ def update(id):
             db.commit()
             return redirect(url_for('post.list'))
 
-    return render_template('post/update.html', post=post)
+    return render_template('post/post-update.html', post=post)
 
 @post_blueprint.route('/<int:id>/delete', methods=('POST',))
 @login_required

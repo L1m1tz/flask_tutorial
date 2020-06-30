@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<div class="row">
+  <div class="col-md-12">
+
+    <head>{% block title %}{{user.username}}{% endblock %}</head>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center m-3">
+  <div class="col-md-12 text-center m-3">
+    <h3> Personal Information</h3>
+    <hr size="2" width="50%" noshade />
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <div class="col-md-6">
+      <h3>{{ user.username }}</h3>
+    </div>
+  </div>
+  <div class="col-md-6 text-left">
+    <div class="col-md-6">
+      <p>First Name: {{ user.firstname }}</p>
+    </div>
+    <div class="col-md-6">
+      <p>Last Name: {{ user.lastname }}</p>
+    </div>
+
+    <div class="col-md-6">
+      <p>Email: {{ user.email }}</p>
+    </div>
+    <div class="col-md-6">
+      <p>Password: haha, Can't show this</p>
+    </div>
+  </div>
+</div>
+{% if g.user['id'] == user.id %}
+<div class="col-md-12 text-center m-4">
+  <p>Please Click button to enable profile update</p>
+  <a class="action" href="{{ url_for('profile.update', id=g.user['id']) }}">
+    <button type="button" class="btn btn-primary">Update</button></a>
+</div>
+{% endif %}
+{% endblock %}

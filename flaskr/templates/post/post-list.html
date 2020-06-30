@@ -2,31 +2,42 @@
 
 {% block header %}
 <h1>{% block title %}Posts{% endblock %}</h1>
-{% if g.user %}
-<a class="action" href="{{ url_for('post.list') }}">New</a>
-{% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="col">
-  <a class="btn btn-primary" href="{{ url_for('post.create') }}" role="button">Create New Post</a>
-</div>
+<div class="row justify-content-center">
+  {% if g.user %}
+  <div class="col-12 m-3 text-right">
+    <a href="{{ url_for('post.create') }}"><button type="button" class="btn btn-primary">Create New Post</button></a>
+  </div>
+  {% endif %}
 
-{% for post in posts %}
-<article class="post">
-  <header>
-    <div>
-      <h1>{{ post['title'] }}</h1>
-      <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
-    </div>
-    {% if g.user['id'] == post['author_id'] %}
-    <a class="action" href="{{ url_for('post.update', id=post['id']) }}">Edit</a>
+  <div class="col-12">
+    {% for post in posts %}
+    <article class="post">
+      <header>
+        <div>
+          <a href="{{ url_for('post.view', id=post['id']) }}">
+            <h1>{{ post['title'] }}</h1>
+          </a>
+          <a href="{{ url_for('profile.view', id=post['author_id']) }}"><div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div></a>
+        </div>
+        <div>
+          {% if g.user['id'] == post['author_id'] %}
+          <a class="action" href="{{ url_for('post.update', id=post['id']) }}">Edit</a>
+          {% endif %}
+        </div>
+      </header>
+    </article>
+    {% if not loop.last %}
+    <hr>
     {% endif %}
-  </header>
-  <p class="body">{{ post['body'] }}</p>
-</article>
-{% if not loop.last %}
-<hr>
-{% endif %}
-{% endfor %}
+    {% endfor %}
+  </div>
+  {% if g.user %}
+  <div class="col-12 m-3 text-right">
+    <a href="{{ url_for('post.create') }}"><button type="button" class="btn btn-primary">Create New Post</button></a>
+  </div>
+  {% endif %}
+</div>
 {% endblock %}
